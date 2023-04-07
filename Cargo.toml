@@ -2,6 +2,12 @@
 name = "solaredge_modbus_chargehq_exporter"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+keywords = ["solaredge", "chargehq"]
+categories = ["command-line-utilities"]
+authors = ["David Rothera <david@rothera.co>"]
+repository = "https://github.com/davidrothera/solaredge_modbus_chargehq_exporter"
+description = "A simple script to extract single phase export and meter information from a SolarEdge ModBus interface and push it to ChargeHQ"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
