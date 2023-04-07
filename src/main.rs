@@ -1,4 +1,4 @@
-use crate::modbus::types::SiteMeters;
+use crate::modbus::SiteMeters;
 use clap::Parser;
 use serde::Serialize;
 use std::net::SocketAddr;

@@ -9,7 +9,7 @@ fn to_be_bytes(data: Vec<u16>) -> Vec<u8> {
 }
 
 #[derive(Debug, Serialize)]
-pub(crate) struct SiteMeters {
+pub struct SiteMeters {
     pub(crate) consumption_kw: f64,
     pub(crate) net_import_kw: f64,
     pub(crate) production_kw: f64,

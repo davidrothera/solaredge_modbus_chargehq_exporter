@@ -1,6 +1,7 @@
-use self::types::{read_register, ModbusRegister, SiteMeters};
 use std::net::SocketAddr;
 use tokio_modbus::{client::tcp, slave::Slave};
+pub use types::SiteMeters;
+use types::{read_register, ModbusRegister};
 
 pub mod types;
 
