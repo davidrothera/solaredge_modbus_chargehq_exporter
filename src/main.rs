@@ -3,6 +3,10 @@ use clap::Parser;
 use serde::Serialize;
 use std::net::SocketAddr;
 use tokio::time::{sleep, Duration};
+use tokio_retry::{
+    strategy::{jitter, FibonacciBackoff},
+    Retry,
+};
 
 mod modbus;
 
@@ -65,9 +69,17 @@ async fn submit_pv_data(args: &Args, pv_data: SiteMeters) -> anyhow::Result<()> 
     Ok(())
 }
 
-async fn run_loop(args: &Args) -> anyhow::Result<()> {
+async fn run_loop() -> anyhow::Result<()> {
+    let args = Args::parse();
     let modbus_data = modbus::read_modbus_data(args.host_address).await?;
     submit_pv_data(&args, modbus_data).await?;
+    Ok(())
+}
+
+async fn retry_loop() -> anyhow::Result<()> {
+    let retry_policy = FibonacciBackoff::from_millis(10).map(jitter).take(5);
+
+    Retry::spawn(retry_policy, run_loop).await?;
     Ok(())
 }
 
@@ -75,7 +87,7 @@ async fn run_loop(args: &Args) -> anyhow::Result<()> {
 async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     loop {
-        match run_loop(&args).await {
+        match retry_loop().await {
             Ok(_) => {
                 println!("Data sent, sleeping {}s", args.sleep_duration_secs);
             }
