@@ -63,10 +63,9 @@ impl DecodableRegister<u32> for u32 {
 pub(crate) async fn read_register<T: DecodableRegister<T>>(
     ctx: &mut Context,
     register: ModbusRegister<T>,
-) -> T {
+) -> anyhow::Result<T> {
     let data = ctx
         .read_holding_registers(register.address, register.length)
-        .await
-        .unwrap();
-    T::decode(data)
+        .await?;
+    Ok(T::decode(data))
 }

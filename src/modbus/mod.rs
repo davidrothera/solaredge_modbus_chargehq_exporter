@@ -10,11 +10,11 @@ pub(crate) async fn read_modbus_data(host: SocketAddr) -> anyhow::Result<SiteMet
 
     // I_AC_Power
     let point: ModbusRegister<i16> = ModbusRegister::new(40083, 1);
-    let ac_power = read_register(&mut ctx, point).await;
+    let ac_power = read_register(&mut ctx, point).await?;
 
     // I_AC_Power_SF
     let point: ModbusRegister<i16> = ModbusRegister::new(40084, 1);
-    let ac_power_scale = read_register(&mut ctx, point).await;
+    let ac_power_scale = read_register(&mut ctx, point).await?;
 
     // Convert to W with scale factor
     let current_ac_power: f64 = ac_power as f64 * 10f64.powi(ac_power_scale.into());
@@ -24,15 +24,15 @@ pub(crate) async fn read_modbus_data(host: SocketAddr) -> anyhow::Result<SiteMet
 
     // M_Exported
     let point: ModbusRegister<u32> = ModbusRegister::new(40226, 2);
-    let exported_energy = read_register(&mut ctx, point).await;
+    let exported_energy = read_register(&mut ctx, point).await?;
 
     // M_Imported
     let point: ModbusRegister<u32> = ModbusRegister::new(40234, 2);
-    let imported_energy = read_register(&mut ctx, point).await;
+    let imported_energy = read_register(&mut ctx, point).await?;
 
     // M_Energy_W_SF
     let point: ModbusRegister<i16> = ModbusRegister::new(40242, 1);
-    let energy_scale = read_register(&mut ctx, point).await;
+    let energy_scale = read_register(&mut ctx, point).await?;
 
     // Convert to Wh with scale factor
     let exported_energy_wh = exported_energy as f64 * 10f64.powi(energy_scale.into());
@@ -44,11 +44,11 @@ pub(crate) async fn read_modbus_data(host: SocketAddr) -> anyhow::Result<SiteMet
 
     // M_AC_Power
     let point: ModbusRegister<i16> = ModbusRegister::new(40206, 1);
-    let meter_power = read_register(&mut ctx, point).await;
+    let meter_power = read_register(&mut ctx, point).await?;
 
     // M_AC_Power_SF
     let point: ModbusRegister<i16> = ModbusRegister::new(40210, 1);
-    let meter_power_sf = read_register(&mut ctx, point).await;
+    let meter_power_sf = read_register(&mut ctx, point).await?;
 
     let meter_power_w = meter_power as f64 * 10f64.powi(meter_power_sf.into());
     let meter_power_kw = -meter_power_w / 1000f64;
